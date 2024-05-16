@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieSession = require("cookie-session");
+const router = require("./src/router");
 
 const PORT = 3003;
 const app = express();
@@ -23,6 +24,8 @@ app.use(
 app.get("/", (req, res) => {
     res.send("Hello world\n");
 });
+
+app.use('', router)
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
