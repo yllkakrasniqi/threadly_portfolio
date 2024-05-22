@@ -13,3 +13,7 @@ create_bucket.sh
 
 ## How to run scripts
 gitbash => ./<fileName>
+
+## Not workking for the moment
+docker build -t threadly-portfolio-demo . 
+docker run -d -p 3004:3004 threadly-portfolio-demo
