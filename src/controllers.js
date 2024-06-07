@@ -1,4 +1,6 @@
 const { minioClient } = require("./utils/minioClient");
+const ProdImage = require("./models/ProdImage")
+
 const fs = require('fs')
 
 const bucketName = "threadly-dev";
@@ -36,14 +38,59 @@ const getObject = async (req, res) => {
   });
 };
 
+
+/**
+ * 
+ * @param {*} file 
+ * @param {*} prod_color_id 
+ * @returns object with columns: _id, filename, path, prod_color_id
+ * 
+ * Function that get a file and save it in minio, a folder (images)
+ * just in case if images lost in minio and in the end create an 
+ * object to save it in mongodb
+ */
+const saveFile = ( file, prod_color_id ) => {
+  return new Promise ((resolve, reject) => {
+    // Create an unique filename to save in database
+    let fileName = file.originalname.toLowerCase().split(" ").join("-");
+    fileName = Date.now() + "-" + fileName;
+
+    // Save for the moment in case minio bucket destroys
+    // and all the files will be lost
+    fs.writeFile(`./images/${fileName}`, file.buffer, (err) => {
+        if (err) reject(err);
+    })
+
+    minioClient.putObject(bucketName, fileName, file.buffer, (err, etag) => {
+      if (err) {
+        // In case of any errors occure, the error with be return
+        reject(err)
+      } else {
+        // At user will return the unique filename, etag and
+        // message that tells everything went well
+        
+        // Resturn an object to save in database 
+        resolve(
+          {
+            _id: fileName,
+            filename: fileName,
+            path: etag.etag,
+            prod_color_id: prod_color_id,
+          }
+        )
+      }
+    });
+  })
+}
+
 /**
  * Function to upload files
  */
-
-const Minio = require('minio');
 const uploadFiles = async (req, res) => {
+  const prod_color_id = req.query.prod_color_id;
+  // let productImages = [];
 
-    // Check if bucket exist in minio
+  // Check if bucket exist in minio
   try {
     const doesBucketExist = await minioClient.bucketExists(bucketName);
     if (doesBucketExist) {
@@ -60,34 +107,20 @@ const uploadFiles = async (req, res) => {
   }
 
   const files = req.files;
-  files.forEach((file) => {
-    // Create an unique filename to save in database
-    let fileName = file.originalname.toLowerCase().split(" ").join("-");
-    fileName = Date.now() + "-" + fileName;
-
-    // Save for the moment in case minio bucket destroys
-    // and all the files will be lost
-    fs.writeFile(`./images/${fileName}`, file.buffer, (err) => {
-        if (err) throw err;
+  const productImages = files.map(file => saveFile(file, prod_color_id))
+  await Promise.all(productImages)
+  .then(result => {
+    ProdImage.insertMany(result)
+    .then((prodImages) => {
+      const productFilenames = prodImages.map(ele => ele.filename)
+      return res.status(200).send(productFilenames);
     })
-
-    minioClient.putObject(bucketName, fileName, file.buffer, (err, etag) => {
-      if (err) {
-        // In case of any errors occure, the error with be return
-        res.status(500).json(err);
-      } else {
-        // At user will return the unique filename, etag and
-        // message that tells everything went well
-        res
-          .status(200)
-          .json({
-            message: "File uploaded successfully",
-            filename: fileName,
-            etag: etag,
-          });
-      }
-    });
-  });
+    .catch((err) => {
+      return res.status(500).json(err);
+      // return res.status(500).send("Error saving image to the database");
+    })
+  })
+  
 } 
 
 module.exports = {

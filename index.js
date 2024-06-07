@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieSession = require("cookie-session");
 const router = require("./src/router");
+const connectDB = require("./src/db/index")
 
 const PORT = 3003;
 const app = express();
@@ -28,5 +29,7 @@ app.get("/", (req, res) => {
 app.use('', router)
 
 app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+  connectDB().then(() => {
+    console.log(`Server listening on ${PORT}`)
+  })
 });
