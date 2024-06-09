@@ -1,7 +1,8 @@
 const { minioClient } = require("./utils/minioClient");
 const ProdImage = require("./models/ProdImage")
 
-const fs = require('fs')
+const fs = require('fs');
+const path = require("path");
 
 const bucketName = "threadly-dev";
 
@@ -11,6 +12,7 @@ const bucketName = "threadly-dev";
  */
 const getObject = async (req, res) => {
   const objectName = req.params.objectName;
+
   // Check if the bucket in minio exist
   try {
     const doesBucketExist = await minioClient.bucketExists(bucketName);
@@ -69,7 +71,7 @@ const saveFile = ( file, prod_color_id ) => {
         // At user will return the unique filename, etag and
         // message that tells everything went well
         
-        // Resturn an object to save in database 
+        // Resturn an object to save in database
         resolve(
           {
             _id: fileName,
@@ -120,10 +122,32 @@ const uploadFiles = async (req, res) => {
       // return res.status(500).send("Error saving image to the database");
     })
   })
-  
 } 
+
+const removeObject = async (req, res) => {
+  const objectName = req.params.objectName;
+
+  const record = await ProdImage.findOne({ filename: objectName });
+  if (!record) {
+    return res
+      .status(400)
+      .send({ message: `File ${objectName} does not exist!` });
+  }
+
+  try {
+    const filePath = path.join(__dirname, "..", "images", record.filename);
+    fs.unlink(filePath);
+
+    await ProdImage.deleteOne({ filename: objectName });
+
+    res.status(200).send({ message: "Success" });
+  } catch (err) {
+    res.status(500).send("Error while deleting the file");
+  }
+}
 
 module.exports = {
   getObject,
-  uploadFiles
+  uploadFiles,
+  removeObject
 };
