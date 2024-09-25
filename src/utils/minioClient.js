@@ -1,9 +1,14 @@
 const Minio = require('minio');
+const config = require('../config');
+
+const endpoint = config.minio.endpoint;
+const access_key = config.minio.access_key
+const secret_key = config.minio.secret_key
 
 exports.minioClient = new Minio.Client({
-    endPoint: "192.168.100.241", //"127.0.0.1",
+    endPoint: endpoint,
     // port: 9090,
     useSSL: false,
-    accessKey: "hv7yoq914WXyWByR",
-    secretKey: "Zt8ANJebA78wru0mqCyECdnfkpj5e3mD",
+    accessKey: access_key,
+    secretKey: secret_key,
 });

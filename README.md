@@ -64,9 +64,11 @@ This project offers three distinct RESTful endpoints for **saving**, **retrievin
         ```
 
 
+## Usage
+
+You can access the APIs at `http://localhost:3000` or on your deployed server. To interact with the API, you can use tools like Postman or cURL. When uploading files, ensure that they are sent as `multipart/form-data`.
 
 
-backend for threadly to upload and get files
 
 # podman machine init
 # podman machine start

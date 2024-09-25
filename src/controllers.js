@@ -1,10 +1,11 @@
-const { minioClient } = require("./utils/minioClient");
-const ProdImage = require("./models/ProdImage")
-
 const fs = require('fs');
 const path = require("path");
 
-const bucketName = "threadly-dev";
+const { minioClient } = require("./utils/minioClient");
+const ProdImage = require("./models/ProdImage")
+const config = require('./config');
+
+const bucketName = config.minio.bucket;
 
 /**
  * Function to get an object from minio bucket

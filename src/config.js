@@ -12,8 +12,11 @@ const config = {
         port: process.env.DB_PORT || 27017,
         name: process.env.DB_NAME || 'db'
     },
-    jwt: {
-        secret_key: process.env.JWT_SECRET_KEY || ''
+    minio: {
+        endpoint: process.env.MINIO_ENDPOINT || '127.0.0.1', 
+        access_key: process.env.MINIO_ACCESS_KEY,
+        secret_key: process.env.MINIO_SECRET_KEY,
+        bucket: process.env.MINIO_BUCKET || 'test_bucket'
     }
 }
 
