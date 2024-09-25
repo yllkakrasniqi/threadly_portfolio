@@ -4,8 +4,8 @@ const { uploadMiddleware } = require("./middleware/uploadMiddleware");
 
 const router = express.Router();
 
-router.get("/image/:objectName", getObject);
-router.post("/image", uploadMiddleware, uploadFiles)
-router.delete("/image/:objectName", removeObject)
+router.post("", uploadMiddleware, uploadFiles) // /upload better
+router.get("/:objectName", getObject);
+router.delete("/:objectName", removeObject)
 
 module.exports = router;

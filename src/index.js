@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
     res.send("Hello world");
 });
 
-app.use('', router)
+app.use('/image', router)
 
 app.listen(PORT, () => {
   connectDB().then(() => {
