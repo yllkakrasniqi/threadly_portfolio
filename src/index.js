@@ -1,14 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 const cookieSession = require("cookie-session");
+
+const config = require('./config');
 const router = require("./router");
 const connectDB = require("./db/index")
 
-const PORT = 3003;
+const PORT = config.app.port;
+
 const app = express();
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Replace with your client's origin
+    origin: config.app.cors_origin,
     credentials: true,
   })
 );
@@ -23,7 +27,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-    res.send("Hello world\n");
+    res.send("Hello world");
 });
 
 app.use('', router)

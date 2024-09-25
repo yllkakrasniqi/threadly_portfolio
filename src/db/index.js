@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
+const config = require('../config');
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/latestdb";
+const { db: { host, port, name} } = config
+const mongo_uri = `mongodb://${host}:${port}/${name}`;
 
 connectDB = async () => {
   mongoose
-    .connect(MONGO_URI, {
+    .connect(mongo_uri, {
     })
     .then(() => {
       console.log("Connected to Mongo!");
