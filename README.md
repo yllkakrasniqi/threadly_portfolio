@@ -1,6 +1,8 @@
 # threadly_portfolio
 backend for threadly to upload and get files
 
+# podman machine init
+# podman machine start
 
 ## start minio with podman 
 run_minio.sh

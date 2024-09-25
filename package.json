@@ -2,10 +2,10 @@
   "name": "threadly_portfolio",
   "version": "1.0.0",
   "description": "backend for threadly to upload and get files",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
+    "start": "node src/index",
+    "dev": "nodemon src/index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
