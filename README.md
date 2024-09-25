@@ -18,6 +18,43 @@ This project offers three distinct RESTful endpoints for **saving**, **retrievin
 - **Minio**: Cloud-native object storage for saving files (images).
 - **Multer**: Middleware for handling multipart file uploads.
 
+## Installation
+
+Follow these steps to install and run the project locally:
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yllkakrasniqi/threadly_portfolio.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd threadly-portfolio
+    ```
+
+3. Install the required dependencies:
+    ```bash
+    npm install
+    ```
+
+4. Set up environment variables by creating a `.env` file in the root of the project:
+    ```bash
+    PORT=3000
+    CORS_ORIGIN=http://localhost:3000 or your deployed server
+    DB_HOST='mongodb_host'
+    DB_PORT=mongodb_port
+    DB_NAME='database_name'
+    MINIO_ENDPOINT=your_minio_endpoint
+    MINIO_ACCESS_KEY=your_minio_access_key
+    MINIO_SECRET_KEY=your_minio_secret_key
+    MINIO_BUCKET=your_minio_bucket_name
+    ```
+
+5. Start the server:
+    ```bash
+    npm start
+    ```
+
 ## API Endpoints
 
 ### **Save File API**
@@ -63,27 +100,39 @@ This project offers three distinct RESTful endpoints for **saving**, **retrievin
         }
         ```
 
+## Minio Scripts
+
+This project includes three scripts for managing Minio (How to run scripts: ./<filename>):
+initialize and start Podman: podman machine init -> podman machine start
+
+1. **Create a Minio Bucket**: 
+    - Script to create a new bucket in Minio for storing your images.
+    - Example command:
+        ```bash
+        ./create_bucket.sh
+        ```
+
+2. **Run Minio**: 
+    - Script to start Minio through podman.
+    - Example command: 
+        ```bash
+        ./run_minio.sh
+        ```
+
+3. **Upload Files to Minio**: 
+    - Script to upload files directly to Minio outside of the API (useful for batch uploads).
+    - Example command:
+        ```bash
+        ./upload_files.sh
+        ```
+
+These scripts allow you to easily manage your Minio setup, create buckets, and upload files independently of the API.
+Some notes: configurate aws with access keys (aws configure)
 
 ## Usage
 
 You can access the APIs at `http://localhost:3000` or on your deployed server. To interact with the API, you can use tools like Postman or cURL. When uploading files, ensure that they are sent as `multipart/form-data`.
 
-
-
-# podman machine init
-# podman machine start
-
-## start minio with podman 
-run_minio.sh
-
-## configurate aws with access keys
-aws configure
-
-## create a bucket
-create_bucket.sh
-
-## How to run scripts
-gitbash => ./<fileName>
 
 ## Not working for the moment
 docker build -t threadly-portfolio-demo . 
